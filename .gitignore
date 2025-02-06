@@ -1,0 +1,9 @@
+# folders
+.vs
+obj
+bin
+Properties
+
+# files
+*.csproj
+*.sln

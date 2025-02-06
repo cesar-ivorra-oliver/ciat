@@ -1,0 +1,6 @@
+﻿namespace ciatCommands.Commands;
+
+public interface ICommand
+{
+  void Execute();
+}
