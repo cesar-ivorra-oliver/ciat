@@ -1,10 +1,7 @@
 ﻿
 using ciat.Core;
 
-using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis;
 using System.CommandLine;
-using System.Reflection;
 
 namespace ciat;
 

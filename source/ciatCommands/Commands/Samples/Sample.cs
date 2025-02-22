@@ -10,14 +10,12 @@ public class Sample : ICommand
   public uint UIntValue { get; set; }
   public long LongValue { get; set; }
   public ulong ULongValue { get; set; }
-
   public float FloatValue { get; set; }
   public double DoubleValue { get; set; }
   public decimal DecimalValue { get; set; }
-
   public bool BoolValue { get; set; }
-
   public char CharValue { get; set; }
+  public string StringValue { get; set; }
 
   public void Execute()
   {
@@ -37,7 +35,8 @@ public class Sample : ICommand
       $"{nameof(DoubleValue)}={DoubleValue} ({DoubleValue.GetType()})",
       $"{nameof(DecimalValue)}={DecimalValue} ({DecimalValue.GetType()})",
       $"{nameof(BoolValue)}={BoolValue} ({BoolValue.GetType()})",
-      $"{nameof(CharValue)}={CharValue} ({CharValue.GetType()})"
+      $"{nameof(CharValue)}={CharValue} ({CharValue.GetType()})",
+      $"{nameof(StringValue)}={StringValue} ({StringValue.GetType()})"
     }));
   }
 }

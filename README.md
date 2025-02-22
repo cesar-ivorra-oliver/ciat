@@ -10,7 +10,7 @@ Cesar Ivorra Automation Tool
 ### Execution of Sample command
 
 ```sh
-ciatLauncher.exe --ByteValue 255 --SByteValue -128 --ShortValue -32768 --UShortValue 65535 --IntValue 2147483647 --UIntValue 4294967295 --LongValue -9223372036854775808 --ULongValue 18446744073709551615 --FloatValue 3.14 --DoubleValue 2.718 --DecimalValue 1.618 --BoolValue true --CharValue A
+ciatLauncher.exe DataTypeDemo --ByteValue 255 --SByteValue -128 --ShortValue -32768 --UShortValue 65535 --IntValue 2147483647 --UIntValue 4294967295 --LongValue -9223372036854775808 --ULongValue 18446744073709551615 --FloatValue 3.14 --DoubleValue 2.718 --DecimalValue 1.618 --BoolValue true --CharValue A --StringValue "Hello world ciat!"
 ```
 
 ### Example result
