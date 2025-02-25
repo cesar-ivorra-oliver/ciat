@@ -14,7 +14,9 @@ $tempDir    = New-Item -ItemType Directory -Path "_ciat_temp" -Force
 # define project names
 $solutionName         = "ciat"
 $launcherProjectName  = "ciatLauncher"
-$commandsProjectName  = "ciatCommands"
+$commandProjectName   = "ciatCommand"
+## define subprojects
+$sampleProjectName = "sample"
 
 Write-Host "Creating projects..."
 Write-Host "Temporary folder created at: $tempDir"
@@ -25,16 +27,22 @@ dotnet new sln -n $solutionName
 
 # Create projects in the temporary folder
 dotnet new console  -o $launcherProjectName --framework net9.0
-dotnet new classlib -o $commandsProjectName --framework net9.0
+dotnet new classlib -o $commandProjectName  --framework net9.0
+## create subprojects
+dotnet new classlib -o $sampleProjectName --framework net9.0
 
 # Define project files
 $vsSolution             = "$solutionName.sln"
 $launcherProjectCsproj  = "$launcherProjectName\$launcherProjectName.csproj"
-$commandsProjectCsproj  = "$commandsProjectName\$commandsProjectName.csproj"
+$commandProjectCsproj   = "$commandProjectName\$commandProjectName.csproj"
+## define sub project files
+$sampleProjectCsproj = "$sampleProjectName\$sampleProjectName.csproj"
 
 # Add projects to the solution
 dotnet sln $vsSolution add $launcherProjectCsproj
-dotnet sln $vsSolution add $commandsProjectCsproj
+dotnet sln $vsSolution add $commandProjectCsproj
+##  add subprojects
+dotnet sln $vsSolution add $sampleProjectCsproj
 
 # Add NuGet packages with specific versions
 dotnet add $launcherProjectCsproj package Microsoft.CodeAnalysis        --version 4.12.0
@@ -42,7 +50,9 @@ dotnet add $launcherProjectCsproj package Microsoft.CodeAnalysis.CSharp --versio
 dotnet add $launcherProjectCsproj package System.CommandLine            --version 2.0.0-beta4.22272.1
 
 # Add references between projects
-dotnet add $launcherProjectCsproj reference $commandsProjectCsproj
+dotnet add $launcherProjectCsproj reference $sampleProjectCsproj
+dotnet add $sampleProjectCsproj reference $commandProjectCsproj
+
 
 Write-Host "Projects created in the temporary folder."
 
@@ -50,7 +60,9 @@ Write-Host "Projects created in the temporary folder."
 Set-Location $sourceDir
 Copy-Item "$tempDir\$vsSolution"            "$sourceDir\$vsSolution"            -Force
 Copy-Item "$tempDir\$launcherProjectCsproj" "$sourceDir\$launcherProjectCsproj" -Force
-Copy-Item "$tempDir\$commandsProjectCsproj" "$sourceDir\$commandsProjectCsproj" -Force
+Copy-Item "$tempDir\$commandProjectCsproj"  "$sourceDir\$commandProjectCsproj"  -Force
+## copy subprojects
+Copy-Item "$tempDir\$sampleProjectCsproj" "$sourceDir\$sampleProjectCsproj" -Force
 
 Write-Host "Solution and project files copied to source\ without affecting existing code."
 

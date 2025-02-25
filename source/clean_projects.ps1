@@ -40,7 +40,9 @@ function Remove-Or-Preview {
 $itemsToRemove = @(
   "ciat.sln", 
   "ciatLauncher/ciatLauncher.csproj", 
-  "ciatCommands/ciatCommands.csproj"
+  "ciatCommand/ciatCommand.csproj",
+
+  "sample/sample.csproj"
 )
 
 # Remove files

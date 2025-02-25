@@ -1,7 +1,6 @@
 ﻿
-using ciat.Core;
-
 using System.CommandLine;
+using ciat.Core;
 
 namespace ciat;
 

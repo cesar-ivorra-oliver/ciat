@@ -1,6 +1,8 @@
-﻿namespace ciatCommands.Commands;
+﻿using ciat.ciatCommand;
 
-public class Sample : ICommand
+namespace sample.Commands.Samples;
+
+public class Sample : IciatCommand
 {
   public byte ByteValue { get; set; }
   public sbyte SByteValue { get; set; }

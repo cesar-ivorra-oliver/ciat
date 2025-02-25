@@ -1,7 +1,7 @@
 ﻿
-using ciatCommands.Commands;
 using System.CommandLine;
 using System.Reflection;
+using ciat.ciatCommand;
 
 namespace ciat.Core
 {
@@ -14,12 +14,12 @@ namespace ciat.Core
     public CommandFactory() {
       LoadCommands();
     }
-
+     
     private void LoadCommands()
     {
-      _commandTypes = Assembly.GetAssembly(typeof(ICommand))
+      _commandTypes = Assembly.Load("sample") //TODO: Fix this, load dinamically
                         .GetTypes()
-                        .Where(type => !type.IsInterface || !type.IsAbstract)
+                        .Where(t => typeof(IciatCommand).IsAssignableFrom(t) && !t.IsInterface)
                         .ToList();
 
       var commands      = _commandTypes.Select(type => GetCommand(type)).ToList();
@@ -90,7 +90,7 @@ namespace ciat.Core
       }
 
       // execute the command
-      (instance as ICommand).Execute();
+      (instance as IciatCommand).Execute();
     }
   }
 }
