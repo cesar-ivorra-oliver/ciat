@@ -1,4 +1,4 @@
-﻿namespace ciat.ciatCommand;
+﻿namespace Ciat.CiatCommand;
 
 public interface IciatCommand
 {

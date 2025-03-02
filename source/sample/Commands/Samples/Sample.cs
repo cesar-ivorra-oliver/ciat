@@ -1,23 +1,23 @@
-﻿using ciat.ciatCommand;
+﻿using Ciat.CiatCommand;
 
 namespace sample.Commands.Samples;
 
 public class Sample : IciatCommand
 {
-  public byte ByteValue { get; set; }
-  public sbyte SByteValue { get; set; }
-  public short ShortValue { get; set; }
-  public ushort UShortValue { get; set; }
-  public int IntValue { get; set; }
-  public uint UIntValue { get; set; }
-  public long LongValue { get; set; }
-  public ulong ULongValue { get; set; }
-  public float FloatValue { get; set; }
-  public double DoubleValue { get; set; }
-  public decimal DecimalValue { get; set; }
-  public bool BoolValue { get; set; }
-  public char CharValue { get; set; }
-  public string StringValue { get; set; }
+  public byte ByteProperty { get; set; }
+  public sbyte SByteProperty { get; set; }
+  public short ShortProperty { get; set; }
+  public ushort UShortProperty { get; set; }
+  public int IntProperty { get; set; }
+  public uint UIntProperty { get; set; }
+  public long LongProperty { get; set; }
+  public ulong ULongProperty { get; set; }
+  public float FloatProperty { get; set; }
+  public double DoubleProperty { get; set; }
+  public decimal DecimalProperty { get; set; }
+  public bool BoolProperty { get; set; }
+  public char CharProperty { get; set; }
+  public string StringProperty { get; set; }
 
   public void Execute()
   {
@@ -25,20 +25,20 @@ public class Sample : IciatCommand
     {
       $"Executed class name: '{nameof(Sample)}'",
       "properties:",
-      $"{nameof(ByteValue)}={ByteValue} ({ByteValue.GetType()})",
-      $"{nameof(SByteValue)}={SByteValue} ({SByteValue.GetType()})",
-      $"{nameof(ShortValue)}={ShortValue} ({ShortValue.GetType()})",
-      $"{nameof(UShortValue)}={UShortValue} ({UShortValue.GetType()})",
-      $"{nameof(IntValue)}={IntValue} ({IntValue.GetType()})",
-      $"{nameof(UIntValue)}={UIntValue} ({UIntValue.GetType()})",
-      $"{nameof(LongValue)}={LongValue} ({LongValue.GetType()})",
-      $"{nameof(ULongValue)}={ULongValue} ({ULongValue.GetType()})",
-      $"{nameof(FloatValue)}={FloatValue} ({FloatValue.GetType()})",
-      $"{nameof(DoubleValue)}={DoubleValue} ({DoubleValue.GetType()})",
-      $"{nameof(DecimalValue)}={DecimalValue} ({DecimalValue.GetType()})",
-      $"{nameof(BoolValue)}={BoolValue} ({BoolValue.GetType()})",
-      $"{nameof(CharValue)}={CharValue} ({CharValue.GetType()})",
-      $"{nameof(StringValue)}={StringValue} ({StringValue.GetType()})"
+      $"{nameof(ByteProperty)}={ByteProperty} ({ByteProperty.GetType()})",
+      $"{nameof(SByteProperty)}={SByteProperty} ({SByteProperty.GetType()})",
+      $"{nameof(ShortProperty)}={ShortProperty} ({ShortProperty.GetType()})",
+      $"{nameof(UShortProperty)}={UShortProperty} ({UShortProperty.GetType()})",
+      $"{nameof(IntProperty)}={IntProperty} ({IntProperty.GetType()})",
+      $"{nameof(UIntProperty)}={UIntProperty} ({UIntProperty.GetType()})",
+      $"{nameof(LongProperty)}={LongProperty} ({LongProperty.GetType()})",
+      $"{nameof(ULongProperty)}={ULongProperty} ({ULongProperty.GetType()})",
+      $"{nameof(FloatProperty)}={FloatProperty} ({FloatProperty.GetType()})",
+      $"{nameof(DoubleProperty)}={DoubleProperty} ({DoubleProperty.GetType()})",
+      $"{nameof(DecimalProperty)}={DecimalProperty} ({DecimalProperty.GetType()})",
+      $"{nameof(BoolProperty)}={BoolProperty} ({BoolProperty.GetType()})",
+      $"{nameof(CharProperty)}={CharProperty} ({CharProperty.GetType()})",
+      $"{nameof(StringProperty)}={StringProperty} ({StringProperty.GetType()})"
     }));
   }
 }

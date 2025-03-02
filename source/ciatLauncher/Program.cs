@@ -1,8 +1,8 @@
 ﻿
 using System.CommandLine;
-using ciat.Core;
+using CiatLauncher.Core;
 
-namespace ciat;
+namespace Ciat;
 
 class Program
 {

@@ -1,29 +1,24 @@
 ﻿
 using System.CommandLine;
 using System.Reflection;
-using ciat.ciatCommand;
+using Ciat.CiatCommand;
 
-namespace ciat.Core
+namespace CiatLauncher.Core
 {
   public class CommandFactory
   {
     public List<Command> AvailableCommands { get; private set; }
 
+
+    private CiatSettings _ciatSettings;
+
     private List<Type> _commandTypes;
 
-    public CommandFactory() {
-      LoadCommands();
-    }
-     
-    private void LoadCommands()
-    {
-      _commandTypes = Assembly.Load("sample") //TODO: Fix this, load dinamically
-                        .GetTypes()
-                        .Where(t => typeof(IciatCommand).IsAssignableFrom(t) && !t.IsInterface)
-                        .ToList();
 
-      var commands      = _commandTypes.Select(type => GetCommand(type)).ToList();
-      AvailableCommands = commands;
+    public CommandFactory()
+    {
+      LoadCiatSettings();
+      LoadCiatCommands();
     }
 
     public Command GetCommand(string commandName)
@@ -35,6 +30,37 @@ namespace ciat.Core
       );
 
       return GetCommand(commandType);
+    }
+
+    private void LoadCiatSettings()
+    {
+      string settingsYamlPath = Path.Combine(AppContext.BaseDirectory, "ciatSettings.yaml");
+
+      if(!File.Exists(settingsYamlPath))
+      {
+        Console.WriteLine("Settings file not found.");
+        throw new FileNotFoundException("Settings file not found.");
+      }
+
+      _ciatSettings = new CiatSettings(settingsYamlPath);
+    }
+
+    private void LoadCiatCommands()
+    {
+      _commandTypes = new List<Type>();
+
+      _ciatSettings.Solution.Projects.SubProjects
+       .Select(project => Assembly.Load(project.Name))
+       .ToList()
+       .ForEach(assembly =>
+       {
+         _commandTypes.AddRange(
+            assembly.GetTypes()
+                    .Where(t => typeof(IciatCommand).IsAssignableFrom(t) && !t.IsInterface));
+       });
+
+      var commands      = _commandTypes.Select(GetCommand).ToList();
+      AvailableCommands = commands;
     }
 
     private Command GetCommand(Type commandType)
@@ -50,12 +76,10 @@ namespace ciat.Core
 
       // add the options to the command
       comandOptions.ForEach(option => command.Add(option));
+      Dictionary<string, string> args = new Dictionary<string, string>();
 
       command.SetHandler((context) =>
       {
-
-        Dictionary<string, string> args = new Dictionary<string, string>();
-
         foreach (var arg in context.ParseResult.CommandResult.Children)
         {
           var optionName = arg.Symbol.Name;

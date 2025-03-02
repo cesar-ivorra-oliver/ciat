@@ -19,7 +19,9 @@ Console.WriteLine($"Temporary directory created at '{dirSettings.TempDirectory}'
 #endregion
 
 #region launcher project
+Console.ForegroundColor = ConsoleColor.Cyan;
 Console.WriteLine("Generating launcher project ...");
+Console.ResetColor();
 Project launcher = settings.Solution.Projects.Launcher;
 string launcherProjectFile = Path.Combine(launcher.Name, $"{launcher.Name}.csproj");
 
@@ -38,21 +40,29 @@ launchercsproj.Root.Add(
 );
 launchercsproj.Save(launcherProjectFile);
 
+Console.ForegroundColor = ConsoleColor.Cyan;
 Console.WriteLine("Launcher project generated.");
+Console.ResetColor();
 #endregion
 
 #region command project
+Console.ForegroundColor = ConsoleColor.Cyan;
 Console.WriteLine("Generating command project ...");
+Console.ResetColor();
 Project command = settings.Solution.Projects.Command;
 string commandProjectFile = Path.Combine(command.Name, $"{command.Name}.csproj");
 
 CommandLine.Execute("dotnet", $"new {command.Type} -o {command.Name} --framework {command.Framework}");
 command.Packages?.ForEach(package => CommandLine.Execute("dotnet", $"add {commandProjectFile} package {package.Name} --version {package.Version}"));
+Console.ForegroundColor = ConsoleColor.Cyan;
 Console.WriteLine("Command project generated.");
+Console.ResetColor();
 #endregion
 
 #region sub-projects
+Console.ForegroundColor = ConsoleColor.Cyan;
 Console.WriteLine("Generating sub-projects ...");
+Console.ResetColor();
 List<string> subProjectFiles = [];
 settings.Solution.Projects.SubProjects?.ForEach(subProject => {
   string subProjectProjectFile = Path.Combine(subProject.Name, $"{subProject.Name}.csproj");
@@ -67,7 +77,9 @@ settings.Solution.Projects.SubProjects?.ForEach(subProject => {
   // each sub-project must be referenced by the launcher project
   CommandLine.Execute("dotnet", $"add {launcherProjectFile} reference {subProjectProjectFile}");
 });
+Console.ForegroundColor = ConsoleColor.Cyan;
 Console.WriteLine("Sub-projects generated.");
+Console.ResetColor();
 #endregion
 
 #region solution file
