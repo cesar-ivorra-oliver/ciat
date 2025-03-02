@@ -8,102 +8,127 @@ Console.WriteLine("Generating the projects ...");
 
 #region setup
 // load the settings
-string ciatSettingsFileName = "ciatSettings.yaml";
-DirectorySettings dirSettings = new DirectorySettings();
-CiatSettings settings = new CiatSettings(Path.Combine(dirSettings.SourceDirectory, ciatSettingsFileName));
+string ciatSettingsFileName   = "ciatSettings.yaml";
+DirectorySettings dirSettings = new();
+CiatSettings settings         = new(Path.Combine(dirSettings.SourceDirectory, ciatSettingsFileName));
 
 // create the temp directory
+Console.WriteLine($"Using the temporary directory '{dirSettings.TempDirectory}'.");
 Directory.CreateDirectory(dirSettings.TempDirectory);
 Directory.SetCurrentDirectory(dirSettings.TempDirectory);
-Console.WriteLine($"Temporary directory created at '{dirSettings.TempDirectory}'.");
 #endregion
 
 #region launcher project
-Console.ForegroundColor = ConsoleColor.Cyan;
-Console.WriteLine("Generating launcher project ...");
-Console.ResetColor();
 Project launcher = settings.Solution.Projects.Launcher;
-string launcherProjectFile = Path.Combine(launcher.Name, $"{launcher.Name}.csproj");
 
-CommandLine.Execute("dotnet", $"new {launcher.Type} -o {launcher.Name} --framework {launcher.Framework}");
-launcher.Packages?.ForEach(package => CommandLine.Execute("dotnet", $"add {launcherProjectFile} package {package.Name} --version {package.Version}"));
-
-// add reference to ciatSettings.yaml
-XDocument launchercsproj = XDocument.Load(launcherProjectFile);
-launchercsproj.Root.Add(
-  new XElement("ItemGroup",
-    new XElement("Content",
-      new XAttribute("Include", Path.Combine("..", ciatSettingsFileName)),
-      new XElement("CopyToOutputDirectory", "PreserveNewest")
-    )
-  )
-);
-launchercsproj.Save(launcherProjectFile);
-
-Console.ForegroundColor = ConsoleColor.Cyan;
-Console.WriteLine("Launcher project generated.");
-Console.ResetColor();
+Generate.Project(launcher.Name, launcher.Type, launcher.Framework, launcher.Packages, out string launcherCsprojFile);
+Generate.AddExternalReference(launcherCsprojFile, Path.Combine("..", ciatSettingsFileName));
 #endregion
 
 #region command project
-Console.ForegroundColor = ConsoleColor.Cyan;
-Console.WriteLine("Generating command project ...");
-Console.ResetColor();
 Project command = settings.Solution.Projects.Command;
-string commandProjectFile = Path.Combine(command.Name, $"{command.Name}.csproj");
 
-CommandLine.Execute("dotnet", $"new {command.Type} -o {command.Name} --framework {command.Framework}");
-command.Packages?.ForEach(package => CommandLine.Execute("dotnet", $"add {commandProjectFile} package {package.Name} --version {package.Version}"));
-Console.ForegroundColor = ConsoleColor.Cyan;
-Console.WriteLine("Command project generated.");
-Console.ResetColor();
+Generate.Project(command.Name, command.Type, command.Framework, command.Packages, out string commandCsprojFile);
 #endregion
 
 #region sub-projects
-Console.ForegroundColor = ConsoleColor.Cyan;
-Console.WriteLine("Generating sub-projects ...");
-Console.ResetColor();
-List<string> subProjectFiles = [];
-settings.Solution.Projects.SubProjects?.ForEach(subProject => {
-  string subProjectProjectFile = Path.Combine(subProject.Name, $"{subProject.Name}.csproj");
-  subProjectFiles.Add(subProjectProjectFile);
+List<string> subProjectFiles = new();
+foreach (Project subProject in settings.Solution.Projects.SubProjects) {
+  Generate.Project(subProject.Name, subProject.Type, subProject.Framework, subProject.Packages, out string subProjectFile);
+  Generate.AddReference(subProjectFile, commandCsprojFile);
+  Generate.AddReference(launcherCsprojFile, subProjectFile);
 
-  CommandLine.Execute("dotnet", $"new {subProject.Type} -o {subProject.Name} --framework {subProject.Framework}");
-  subProject.Packages?.ForEach(package => CommandLine.Execute("dotnet", $"add {subProjectProjectFile} package {package.Name} --version {package.Version}"));
-
-  // each sub-project must get reference of the command project
-  CommandLine.Execute("dotnet", $"add {subProjectProjectFile} reference {commandProjectFile}");
-
-  // each sub-project must be referenced by the launcher project
-  CommandLine.Execute("dotnet", $"add {launcherProjectFile} reference {subProjectProjectFile}");
-});
-Console.ForegroundColor = ConsoleColor.Cyan;
-Console.WriteLine("Sub-projects generated.");
-Console.ResetColor();
+  subProjectFiles.Add(subProjectFile);
+}
 #endregion
 
 #region solution file
-string vsSolutionFile = $"{settings.Solution.Name}.sln";
-CommandLine.Execute("dotnet", $"new sln -n {settings.Solution.Name}");
-CommandLine.Execute("dotnet", $"sln {vsSolutionFile} add {launcherProjectFile}");
-CommandLine.Execute("dotnet", $"sln {vsSolutionFile} add {commandProjectFile}");
-subProjectFiles.ForEach(subProjectFile => CommandLine.Execute("dotnet", $"sln {vsSolutionFile} add {subProjectFile}"));
-
-Console.WriteLine("Projects generated in the temporary directory.");
+Generate.Solution(settings.Solution.Name, out string slnFile);
+Generate.AddProject(slnFile, launcherCsprojFile);
+Generate.AddProject(slnFile, commandCsprojFile);
+foreach (string subProjectFile in subProjectFiles) {
+  Generate.AddProject(slnFile, subProjectFile);
+}
 #endregion
 
 #region copy projects
-Directory.SetCurrentDirectory(dirSettings.SourceDirectory);
-File.Copy(Path.Combine(dirSettings.TempDirectory, vsSolutionFile),      Path.Combine(dirSettings.SourceDirectory, vsSolutionFile));
-File.Copy(Path.Combine(dirSettings.TempDirectory, launcherProjectFile), Path.Combine(dirSettings.SourceDirectory, launcherProjectFile));
-File.Copy(Path.Combine(dirSettings.TempDirectory, commandProjectFile),  Path.Combine(dirSettings.SourceDirectory, commandProjectFile));
-subProjectFiles.ForEach(subProjectFile => File.Copy(Path.Combine(dirSettings.TempDirectory, subProjectFile), Path.Combine(dirSettings.SourceDirectory, subProjectFile)));
+File.Copy(slnFile,            Path.Combine(dirSettings.SourceDirectory, slnFile));
+File.Copy(launcherCsprojFile, Path.Combine(dirSettings.SourceDirectory, launcherCsprojFile));
+File.Copy(commandCsprojFile,  Path.Combine(dirSettings.SourceDirectory, commandCsprojFile));
+foreach (string subProjectFile in subProjectFiles) {
+  File.Copy(subProjectFile,   Path.Combine(dirSettings.SourceDirectory, subProjectFile));
+}
+
 Console.WriteLine("Projects copied to the source directory without affecting the existing code files.");
 
 // clean up the temp directory
 Console.WriteLine("Cleaning up the temporary directory ...");
+Directory.SetCurrentDirectory(dirSettings.SourceDirectory);
 Directory.Delete(dirSettings.TempDirectory, true);
-Console.WriteLine("Temporary directory deleted.");
 #endregion
 
 Console.WriteLine("Projects generated successfully.");
+
+#region helper classes
+public static class Generate {
+  public static void Solution(string name, out string slnFilePath) {
+    Console.ForegroundColor = ConsoleColor.Cyan;
+    Console.WriteLine($"Generating {name} solution ...");
+    Console.ResetColor();
+
+    // solution file
+    slnFilePath = $"{name}.sln";
+
+    // generate the solution
+    CommandLine.Execute("dotnet", $"new sln -n {name}");
+  }
+  public static void Project(string name, string type, string framework, IEnumerable<Package> packages, out string csProjFilePath) {
+    Console.ForegroundColor = ConsoleColor.Cyan;
+    Console.WriteLine($"Generating {name} project ...");
+    Console.ResetColor();
+
+    // project file
+    csProjFilePath = Path.Combine(name, $"{name}.csproj");
+
+    // generate the project
+    CommandLine.Execute("dotnet", $"new {type} -o {name} --framework {framework}");
+
+    // add the packages
+    foreach (Package package in packages) {
+      CommandLine.Execute("dotnet", $"add {csProjFilePath} package {package.Name} --version {package.Version}");
+    }
+  }
+  public static void AddProject(string slnFile, string csprojFile) {
+    Console.ForegroundColor = ConsoleColor.Cyan;
+    Console.WriteLine($"Adding csproj {csprojFile} to the solution {slnFile} ...");
+    Console.ResetColor();
+
+    CommandLine.Execute("dotnet", $"sln {slnFile} add {csprojFile}");
+  }
+  public static void AddReference(string csprojFile, string referenceFile) {
+    Console.ForegroundColor = ConsoleColor.Cyan;
+    Console.WriteLine($"Adding reference {referenceFile} to the project {csprojFile} ...");
+    Console.ResetColor();
+
+    CommandLine.Execute("dotnet", $"add {csprojFile} reference {referenceFile}");
+  }
+  public static void AddExternalReference(string csprojFile, string referenceFile) {
+    Console.ForegroundColor = ConsoleColor.Cyan;
+    Console.WriteLine($"Adding external reference {referenceFile} to the project {csprojFile} ...");
+    Console.ResetColor();
+
+    // load the project file as XML
+    XDocument csproj = XDocument.Load(csprojFile);
+    csproj.Root.Add(
+      new XElement("ItemGroup",
+        new XElement("Content",
+          new XAttribute("Include", referenceFile),
+          new XElement("CopyToOutputDirectory", "PreserveNewest")
+        )
+      )
+    );
+
+    csproj.Save(csprojFile);
+  }
+}
+#endregion

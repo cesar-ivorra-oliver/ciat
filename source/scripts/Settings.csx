@@ -3,6 +3,7 @@
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
 
+# region directory settings
 public class DirectorySettings {
   public string ScriptsDirectory { get; private set; }
   public string SourceDirectory { get; private set; }
@@ -39,8 +40,9 @@ public class DirectorySettings {
     return Path.Combine(SourceDirectory, tempDirectoryName); // <repo>/source/ciat_temp_<guid>
   }
 }
+#endregion
 
-# region CiatSettings
+# region ciat settings
 public class CiatSettings {
   public Solution Solution { get; set; }
 
@@ -74,14 +76,18 @@ public class Solution {
 public class Projects {
   public Project Launcher { get; set; }
   public Project Command { get; set; }
-  public List<Project> SubProjects { get; set; }
+
+  [YamlMember(DefaultValuesHandling = DefaultValuesHandling.OmitNull)]
+  public List<Project> SubProjects { get; set; } = new List<Project>();
 }
 
 public class Project {
   public string Name { get; set; }
   public string Framework { get; set; }
   public string Type { get; set; }
-  public List<Package> Packages { get; set; }
+
+  [YamlMember(DefaultValuesHandling = DefaultValuesHandling.OmitNull)]
+  public List<Package> Packages { get; set; } = new List<Package>();
 }
 
 public class Package {

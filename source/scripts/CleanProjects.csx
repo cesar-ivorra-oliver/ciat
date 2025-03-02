@@ -6,8 +6,8 @@ using YamlDotNet.Serialization;
 Console.WriteLine("Cleaning the projects ...");
 
 #region setup
-DirectorySettings dirSettings = new DirectorySettings();
-CiatSettings settings = new CiatSettings(Path.Combine(dirSettings.SourceDirectory, "ciatSettings.yaml"));
+DirectorySettings dirSettings = new ();
+CiatSettings settings         = new (Path.Combine(dirSettings.SourceDirectory, "ciatSettings.yaml"));
 string[] projectFolders = [
   "bin",
   "obj",
@@ -26,19 +26,20 @@ Clean.Project([$"{settings.Solution.Name}.sln"], [".vs"]);
 // clean projects
 Project launcher  = settings.Solution.Projects.Launcher;
 Project command   = settings.Solution.Projects.Command;
+
 Clean.Project(
-  [Path.Combine(launcher.Name, $"{launcher.Name}.csproj")],
+  new [] { Path.Combine(launcher.Name, $"{launcher.Name}.csproj") },
   projectFolders.Select(folder => Path.Combine(launcher.Name, folder))
 );
 Clean.Project(
-  [Path.Combine(command.Name, $"{command.Name}.csproj")],
+  new [] { Path.Combine(command.Name, $"{command.Name}.csproj") },
   projectFolders.Select(folder => Path.Combine(command.Name, folder))
 );
 
 // clean sub-projects
 settings.Solution.Projects.SubProjects.ForEach(subProject => {
   Clean.Project(
-    [Path.Combine(subProject.Name, $"{subProject.Name}.csproj")],
+    new [] { Path.Combine(subProject.Name, $"{subProject.Name}.csproj") },
     projectFolders.Select(folder => Path.Combine(subProject.Name, folder))
   );
 });
@@ -46,6 +47,7 @@ settings.Solution.Projects.SubProjects.ForEach(subProject => {
 
 Console.WriteLine("Projects cleaned.");
 
+#region helper classes
 public static class Clean {
   public static bool Preview { get; set; }
 
@@ -77,3 +79,4 @@ public static class Clean {
     Console.ResetColor();
   }
 }
+#endregion
