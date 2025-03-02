@@ -1,0 +1,1 @@
+dotnet-script .\scripts\GenerateProjects.csx

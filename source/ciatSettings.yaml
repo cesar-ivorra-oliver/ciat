@@ -1,0 +1,22 @@
+solution:
+  name: ciat
+  projects:
+    launcher:
+      name: ciatLauncher
+      framework: net9.0
+      type: console
+      packages:
+        - name: Microsoft.CodeAnalysis
+          version: 4.12.0
+        - name: Microsoft.CodeAnalysis.CSharp
+          version: 4.12.0
+        - name: System.CommandLine
+          version: 2.0.0-beta4.22272.1
+    command:
+      name: ciatCommand
+      framework: net9.0
+      type: classlib
+    subProjects: # List of sub-projects (added by the user)
+      - name: sample
+        type: classlib
+        framework: net9.0

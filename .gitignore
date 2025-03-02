@@ -1,5 +1,6 @@
 # folders
 .vs
+.vscode
 obj
 bin
 Properties
@@ -7,3 +8,4 @@ Properties
 # files
 *.csproj
 *.sln
+omnisharp.json
