@@ -1,17 +1,23 @@
 <mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36" version="26.0.16">
   <diagram name="Página-1" id="oawTkrKY9xNyMKzac5mp">
-    <mxGraphModel dx="979" dy="945" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="1189" dy="1147" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
+        <mxCell id="Y71bqyHjgWRftOfzoQmF-34" value="Sample Assembly" style="shape=umlFrame;whiteSpace=wrap;html=1;pointerEvents=0;width=100;height=30;dashed=1;dashPattern=8 8;" parent="1" vertex="1">
+          <mxGeometry x="380" y="480" width="390" height="340" as="geometry" />
+        </mxCell>
+        <mxCell id="Y71bqyHjgWRftOfzoQmF-33" value="CiatCommand Assembly" style="shape=umlFrame;whiteSpace=wrap;html=1;pointerEvents=0;width=150;height=30;dashed=1;dashPattern=8 8;" parent="1" vertex="1">
+          <mxGeometry x="380" y="230" width="220" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="Y71bqyHjgWRftOfzoQmF-32" value="CiatLauncher Assembly" style="shape=umlFrame;whiteSpace=wrap;html=1;pointerEvents=0;fillColor=none;dashed=1;dashPattern=8 8;shadow=0;width=140;height=30;" parent="1" vertex="1">
+          <mxGeometry x="60" y="40" width="200" height="480" as="geometry" />
+        </mxCell>
         <mxCell id="H3ovQA2IISB8Qhp0_RAp-9" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;Program&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;&lt;br&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ Main (string[]): int&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;html=1;whiteSpace=wrap;" parent="1" vertex="1">
           <mxGeometry x="80" y="80" width="160" height="90" as="geometry" />
         </mxCell>
         <mxCell id="H3ovQA2IISB8Qhp0_RAp-11" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;CommandFactory&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ field: Type&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ method(): Type&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;html=1;whiteSpace=wrap;" parent="1" vertex="1">
           <mxGeometry x="80" y="280" width="160" height="90" as="geometry" />
-        </mxCell>
-        <mxCell id="H3ovQA2IISB8Qhp0_RAp-12" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;i&gt;&amp;lt;&amp;lt;Interface&amp;gt;&amp;gt;&lt;/i&gt;&lt;br&gt;&lt;b&gt;IciatCommand&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;&lt;br&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ Execute (): void&lt;br&gt;&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;html=1;whiteSpace=wrap;" parent="1" vertex="1">
-          <mxGeometry x="400" y="275" width="180" height="100" as="geometry" />
         </mxCell>
         <mxCell id="H3ovQA2IISB8Qhp0_RAp-19" value="" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" parent="1" source="H3ovQA2IISB8Qhp0_RAp-11" target="H3ovQA2IISB8Qhp0_RAp-12" edge="1">
           <mxGeometry relative="1" as="geometry">
@@ -24,18 +30,10 @@
             <mxPoint y="-9" as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="H3ovQA2IISB8Qhp0_RAp-21" value="" style="endArrow=classic;html=1;rounded=0;" parent="1" edge="1">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="690" y="40" as="sourcePoint" />
-            <mxPoint x="790" y="40" as="targetPoint" />
-          </mxGeometry>
+        <mxCell id="G_fu5AgsQECdFCCMxKEZ-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" parent="1" source="H3ovQA2IISB8Qhp0_RAp-27" target="H3ovQA2IISB8Qhp0_RAp-12" edge="1">
+          <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="H3ovQA2IISB8Qhp0_RAp-22" value="Label" style="edgeLabel;resizable=0;html=1;;align=center;verticalAlign=middle;" parent="H3ovQA2IISB8Qhp0_RAp-21" connectable="0" vertex="1">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint y="-9" as="offset" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="H3ovQA2IISB8Qhp0_RAp-25" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="H3ovQA2IISB8Qhp0_RAp-9" edge="1" target="H3ovQA2IISB8Qhp0_RAp-11">
+        <mxCell id="H3ovQA2IISB8Qhp0_RAp-25" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="H3ovQA2IISB8Qhp0_RAp-9" target="H3ovQA2IISB8Qhp0_RAp-11" edge="1">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="60" y="450" as="sourcePoint" />
             <mxPoint x="160" y="240" as="targetPoint" />
@@ -46,38 +44,31 @@
             <mxPoint x="10" y="-8" as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="G_fu5AgsQECdFCCMxKEZ-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" parent="1" source="H3ovQA2IISB8Qhp0_RAp-27" target="H3ovQA2IISB8Qhp0_RAp-12" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
         <mxCell id="H3ovQA2IISB8Qhp0_RAp-27" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;Sample&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ ByteProperty: byte&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ SByteVProperty sbyte&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ ShortVProperty short&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ UShortVaPropertyushort&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ InPropertye: int&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ UIntProperty: uint&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ LongProperty: long&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ ULongVProperty ulong&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ FloatVProperty float&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ DoubleVaPropertydouble&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ DecimalValPropertyecimal&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ BoolProperty: bool&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ CharProperty: char&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ StringVaPropertystring&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ Execute (): void&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;html=1;whiteSpace=wrap;" parent="1" vertex="1">
           <mxGeometry x="410" y="520" width="160" height="270" as="geometry" />
         </mxCell>
-        <mxCell id="Y71bqyHjgWRftOfzoQmF-7" value="" style="group" vertex="1" connectable="0" parent="1">
-          <mxGeometry x="60" y="40" width="200" height="350" as="geometry" />
+        <mxCell id="H3ovQA2IISB8Qhp0_RAp-12" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;i&gt;&amp;lt;&amp;lt;Interface&amp;gt;&amp;gt;&lt;/i&gt;&lt;br&gt;&lt;b&gt;IciatCommand&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;&lt;br&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ Execute (): void&lt;br&gt;&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;html=1;whiteSpace=wrap;" parent="1" vertex="1">
+          <mxGeometry x="400" y="275" width="180" height="100" as="geometry" />
         </mxCell>
-        <mxCell id="Y71bqyHjgWRftOfzoQmF-2" value="" style="rounded=1;whiteSpace=wrap;html=1;dashed=1;dashPattern=8 8;fillColor=none;" vertex="1" parent="Y71bqyHjgWRftOfzoQmF-7">
-          <mxGeometry width="200" height="350" as="geometry" />
+        <mxCell id="zovtfKp8v_T9U5n_kTu--7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="zovtfKp8v_T9U5n_kTu--5" target="H3ovQA2IISB8Qhp0_RAp-12">
+          <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="Y71bqyHjgWRftOfzoQmF-5" value="CiatLauncher Assembly" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;textShadow=0;spacingLeft=10;" vertex="1" parent="Y71bqyHjgWRftOfzoQmF-7">
-          <mxGeometry width="200" height="29.166666666666668" as="geometry" />
+        <mxCell id="zovtfKp8v_T9U5n_kTu--5" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;Empty&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;&lt;br&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ Execute(): void&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;html=1;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="590" y="520" width="160" height="90" as="geometry" />
         </mxCell>
-        <mxCell id="Y71bqyHjgWRftOfzoQmF-8" value="" style="group;rounded=0;" vertex="1" connectable="0" parent="1">
-          <mxGeometry x="380" y="240" width="220" height="160" as="geometry" />
+        <mxCell id="zovtfKp8v_T9U5n_kTu--8" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;CiatSettings&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ Soution: Solution&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ CiatSettings()&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ CiatSettings(string)&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;html=1;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="80" y="410" width="160" height="90" as="geometry" />
         </mxCell>
-        <mxCell id="Y71bqyHjgWRftOfzoQmF-3" value="" style="rounded=1;whiteSpace=wrap;html=1;dashed=1;dashPattern=8 8;fillColor=none;" vertex="1" parent="Y71bqyHjgWRftOfzoQmF-8">
-          <mxGeometry width="220" height="160" as="geometry" />
+        <mxCell id="zovtfKp8v_T9U5n_kTu--21" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="H3ovQA2IISB8Qhp0_RAp-11" target="zovtfKp8v_T9U5n_kTu--8">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="140" y="390" as="sourcePoint" />
+            <mxPoint x="240" y="390" as="targetPoint" />
+          </mxGeometry>
         </mxCell>
-        <mxCell id="Y71bqyHjgWRftOfzoQmF-6" value="CiatCommand Assembly" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;spacingLeft=10;" vertex="1" parent="Y71bqyHjgWRftOfzoQmF-8">
-          <mxGeometry width="220" height="30" as="geometry" />
-        </mxCell>
-        <mxCell id="Y71bqyHjgWRftOfzoQmF-10" value="" style="group" vertex="1" connectable="0" parent="1">
-          <mxGeometry x="390" y="480" width="200" height="330" as="geometry" />
-        </mxCell>
-        <mxCell id="Y71bqyHjgWRftOfzoQmF-4" value="" style="rounded=1;whiteSpace=wrap;html=1;dashed=1;dashPattern=8 8;fillColor=none;" vertex="1" parent="Y71bqyHjgWRftOfzoQmF-10">
-          <mxGeometry width="200" height="330" as="geometry" />
-        </mxCell>
-        <mxCell id="Y71bqyHjgWRftOfzoQmF-9" value="Sample Assembly" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;spacingLeft=10;" vertex="1" parent="Y71bqyHjgWRftOfzoQmF-10">
-          <mxGeometry width="200" height="28.285714285714285" as="geometry" />
+        <mxCell id="zovtfKp8v_T9U5n_kTu--22" value="get" style="edgeLabel;resizable=0;html=1;;align=center;verticalAlign=middle;" connectable="0" vertex="1" parent="zovtfKp8v_T9U5n_kTu--21">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="14" as="offset" />
+          </mxGeometry>
         </mxCell>
       </root>
     </mxGraphModel>
