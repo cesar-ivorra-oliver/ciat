@@ -3,7 +3,7 @@
 
 namespace sample.Commands.Samples
 {
-  public class Empty : IciatCommand
+  public class Empty : ICiatCommand
   {
     public void Execute()
     {

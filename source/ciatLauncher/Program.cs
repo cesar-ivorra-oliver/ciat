@@ -1,26 +1,18 @@
 ﻿
 using System.CommandLine;
-using CiatLauncher.Core;
+using Ciat.Core;
 
-namespace Ciat;
+namespace Ciat.Launcher;
 
 class Program
 {
   static int Main(string[] args)
   {
-    var factory = new CommandFactory();
+    var factory = new CommandFactory("ciatSettings.yaml");
     var rootCommand = new RootCommand("Cesar Ivorra automation tool.");
 
-
-    if (args.Length == 0)
-    {
-      Console.WriteLine("No command provided.");
-      factory.AvailableCommands.ForEach(rootCommand.AddCommand);
-      return rootCommand.Invoke(["--help"]);
-    }
-
-    // add the requested command
-    rootCommand.AddCommand(factory.GetCommand(args[0]));
+    // add all available commands
+    factory.GetAllCommands().ForEach(rootCommand.AddCommand);
 
     // execute the command
     return rootCommand.Invoke(args);

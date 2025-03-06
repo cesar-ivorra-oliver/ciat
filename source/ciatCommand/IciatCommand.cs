@@ -1,6 +1,7 @@
-﻿namespace Ciat.CiatCommand;
-
-public interface IciatCommand
+﻿namespace Ciat.CiatCommand
 {
-  void Execute();
+  public interface ICiatCommand
+  {
+    void Execute();
+  }
 }
