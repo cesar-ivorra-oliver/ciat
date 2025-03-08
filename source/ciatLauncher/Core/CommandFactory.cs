@@ -4,45 +4,35 @@ using System.Reflection;
 using Ciat.CiatCommand;
 
 namespace Ciat.Core;
+
 public class CommandFactory
 {
   private List<Command> _allCommands;
   private List<Type> _commandTypes;
   private CiatSettings _ciatSettings;
 
-  public CommandFactory(string ciatSettingsFilePath)
+  public CommandFactory(CiatSettings settings)
   {
-    LoadCiatSettings(ciatSettingsFilePath);
+    _ciatSettings = settings;
     LoadCiatCommands();
   }
 
   public Command GetCommand(string commandName)
   {
-    Type commandType = _commandTypes.FirstOrDefault(
+    Type? commandType = _commandTypes.FirstOrDefault(
       commandType => string.Equals(
         commandType.Name,
         commandName,
         StringComparison.InvariantCultureIgnoreCase)
     );
 
-    return GetCommand(commandType);
+    return (commandType == null)
+      ? throw new ArgumentException($"Command '{commandName}' not found.")
+      : GetCiatCommand(commandType);
   }
 
   public List<Command> GetAllCommands() => _allCommands;
 
-
-  private void LoadCiatSettings(string ciatSettingsFilePath)
-  {
-    string settingsYamlPath = Path.Combine(AppContext.BaseDirectory, ciatSettingsFilePath);
-
-    if(!File.Exists(settingsYamlPath))
-    {
-      Console.WriteLine("Settings file not found.");
-      throw new FileNotFoundException("Settings file not found.");
-    }
-
-    _ciatSettings = new CiatSettings(settingsYamlPath);
-  }
 
   private void LoadCiatCommands()
   {
@@ -55,13 +45,13 @@ public class CommandFactory
      {
        _commandTypes.AddRange(
           assembly.GetTypes()
-                  .Where(t => typeof(ICiatCommand).IsAssignableFrom(t) && !t.IsInterface));
+            .Where(t => typeof(ICiatCommand).IsAssignableFrom(t) && !t.IsInterface));
      });
 
-    _allCommands = [.. _commandTypes.Select(GetCommand)];
+    _allCommands = [.. _commandTypes.Select(GetCiatCommand)];
   }
 
-  private Command GetCommand(Type ciatCommandType)
+  private Command GetCiatCommand(Type ciatCommandType)
   {
     // get all the kind of properties
     SearchProperties(ciatCommandType.GetProperties(),
@@ -85,8 +75,8 @@ public class CommandFactory
     // set the handler for the command
     command.SetHandler((context) =>
     {
-      Dictionary<string, string> args = GetArgumentDictionary(context.ParseResult?.CommandResult.Children);
-      Dictionary<string, object> ciatCommandConvertedProperties = GetConvertedProperties(regularProperties, nullableProperties, requiredProperties, args);
+      Dictionary<string, string> commandArgumentsDictionary     = GetArgumentDictionary(context.ParseResult?.CommandResult.Children);
+      Dictionary<string, object> ciatCommandConvertedProperties = GetConvertedProperties(regularProperties, nullableProperties, requiredProperties, commandArgumentsDictionary);
       ExecuteCiatCommand(ciatCommandType, ciatCommandConvertedProperties);
     });
 
@@ -94,7 +84,7 @@ public class CommandFactory
   }
 
 
-  private static void SearchProperties(PropertyInfo[] properties, out List<PropertyInfo> outRegularProperties, out List<PropertyInfo> outNullableProperties, out List<PropertyInfo> outRequiredProperties)
+  private static void SearchProperties(PropertyInfo[] properties, out IEnumerable<PropertyInfo> outRegularProperties, out IEnumerable<PropertyInfo> outNullableProperties, out IEnumerable<PropertyInfo> outRequiredProperties)
   {
     var regularProperties   = Enumerable.Empty<PropertyInfo>();
     var nullableProperties  = Enumerable.Empty<PropertyInfo>();
@@ -106,40 +96,33 @@ public class CommandFactory
 
     // filter nullable properties
     nullableProperties = publicProperties
-      .Where(property => new NullabilityInfoContext().Create(property).WriteState == NullabilityState.Nullable)
-      .ToList();
+      .Where(property => new NullabilityInfoContext()
+      .Create(property).WriteState == NullabilityState.Nullable);
 
     // filter required properties
     requiredProperties = publicProperties
       .Where(property => property.CustomAttributes
-        .Any(attribute => attribute.AttributeType.FullName == "System.Runtime.CompilerServices.RequiredMemberAttribute"))
-      .ToList();
+        .Any(attribute => attribute.AttributeType.FullName == "System.Runtime.CompilerServices.RequiredMemberAttribute"));
 
     // filter regular properties
     regularProperties = publicProperties
       .Where(property => !nullableProperties.Contains(property))
-      .Where(property => !requiredProperties.Contains(property))
-      .ToList();
+      .Where(property => !requiredProperties.Contains(property));
 
-    outRequiredProperties = requiredProperties.ToList();
-    outNullableProperties = nullableProperties.ToList();
-    outRegularProperties  = regularProperties.ToList();
+    outRequiredProperties = requiredProperties;
+    outNullableProperties = nullableProperties;
+    outRegularProperties  = regularProperties;
   }
 
-  private static Dictionary<string, string> GetArgumentDictionary(IEnumerable<System.CommandLine.Parsing.SymbolResult> children)
+  private static Dictionary<string, string> GetArgumentDictionary(IEnumerable<System.CommandLine.Parsing.SymbolResult> commandArguments)
   {
-    Dictionary<string, string> args = [];
-    foreach (var arg in children)
-    {
-      string optionName   = arg.Symbol.Name;
-      string optionValue  = arg.Tokens.FirstOrDefault()?.Value; // TODO: allow multiple values in the future
-
-      args.Add(optionName, optionValue);
-    }
-    return args;
+    return commandArguments.ToDictionary(
+      arg => arg.Symbol.Name,
+      arg => arg.Tokens.FirstOrDefault()?.Value ?? string.Empty
+    );
   }
 
-  private Dictionary<string, object> GetConvertedProperties(List<PropertyInfo> regularProperties, List<PropertyInfo> nullableProperties, List<PropertyInfo> requiredProperties, Dictionary<string, string> arguments)
+  private static Dictionary<string, object> GetConvertedProperties(IEnumerable<PropertyInfo> regularProperties, IEnumerable<PropertyInfo> nullableProperties, IEnumerable<PropertyInfo> requiredProperties, Dictionary<string, string> arguments)
   {
     // get the value for regular properties from the arguments
     Dictionary<string, string> argumentsForRegularProperties = arguments
@@ -165,9 +148,9 @@ public class CommandFactory
     // convert the values to the correct type
     Dictionary<string, object> convertedProperties = new[]
     {
-      GetConvertedRegularProperties(regularProperties, argumentsForRegularProperties),
-      GetConvertedNullableProperties(nullableProperties, argumentsForNullableProperties),
-      GetConvertedRequiredProperties(requiredProperties, argumentsForRequiredProperties)
+      GetConvertedProperties(regularProperties, argumentsForRegularProperties),
+      GetConvertedProperties(nullableProperties, argumentsForNullableProperties),
+      GetConvertedProperties(requiredProperties, argumentsForRequiredProperties, required: true)
     }
     .SelectMany(dict => dict)
     .ToDictionary(pair => pair.Key, pair => pair.Value);
@@ -175,52 +158,27 @@ public class CommandFactory
     return convertedProperties;
   }
 
-  private Dictionary<string, object> GetConvertedRegularProperties(List<PropertyInfo> regularProperties, Dictionary<string, string> propertyValues)
+  private static Dictionary<string, object> GetConvertedProperties(IEnumerable<PropertyInfo> requiredProperties, Dictionary<string, string> propertyValues, bool required = false)
   {
     Dictionary<string, object> convertedProperties = new Dictionary<string, object>();
+    
+    requiredProperties.ToList().ForEach(property => {
+      Type propertyType = required
+        ? property.PropertyType
+        : Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
+      object convertedValue = Convert.ChangeType(propertyValues[property.Name], propertyType);
 
-    regularProperties.ForEach(property => {
-      Type underlyngType    = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
-      object convertedValue = Convert.ChangeType(propertyValues[property.Name], underlyngType);
-      convertedProperties.Add(property.Name, convertedValue);
-    });
-
-
-    return convertedProperties;
-  }
-
-  private Dictionary<string, object> GetConvertedNullableProperties(List<PropertyInfo> nullableProperties, Dictionary<string, string> propertyValues)
-  {
-    Dictionary<string, object> convertedProperties = new Dictionary<string, object>();
-
-    nullableProperties.ForEach(property =>
-    {
-      Type underlyngType    = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
-      object convertedValue = Convert.ChangeType(propertyValues[property.Name], underlyngType);
       convertedProperties.Add(property.Name, convertedValue);
     });
 
     return convertedProperties;
   }
 
-  private Dictionary<string, object> GetConvertedRequiredProperties(List<PropertyInfo> requiredProperties, Dictionary<string, string> propertyValues)
-  {
-    Dictionary<string, object> convertedProperties = new Dictionary<string, object>();
-
-    requiredProperties.ForEach(property => {
-      object convertedValue = Convert.ChangeType(propertyValues[property.Name], property.PropertyType);
-      convertedProperties.Add(property.Name, convertedValue);
-    });
-
-    return convertedProperties;
-  }
-
-  private void ExecuteCiatCommand(Type commandType, Dictionary<string, object> propertyValues) {
+  private static void ExecuteCiatCommand(Type commandType, Dictionary<string, object> propertyValues) {
     // create an instance of the command
-    var instance = Activator.CreateInstance(commandType) as ICiatCommand;
-
-    if (instance == null) {
-      Console.WriteLine($"Error creating instance of {commandType.Name}");
+    if (Activator.CreateInstance(commandType) is not ICiatCommand instance)
+    {
+      Console.WriteLine($"Error creating instance of '{commandType.Name}'.");
       return;
     }
 

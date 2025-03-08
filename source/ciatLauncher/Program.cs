@@ -8,7 +8,11 @@ class Program
 {
   static int Main(string[] args)
   {
-    var factory = new CommandFactory("ciatSettings.yaml");
+    // core 
+    var settings  = new CiatSettings("ciatSettings.yaml");
+    var factory   = new CommandFactory(settings);
+
+    // command line root
     var rootCommand = new RootCommand("Cesar Ivorra automation tool.");
 
     // add all available commands

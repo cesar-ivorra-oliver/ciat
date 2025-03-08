@@ -1,17 +1,12 @@
 #load "CommandLine.csx"
 #load "Settings.csx"
 
-
 using System.Xml.Linq;
+
 
 Console.WriteLine("Generating the projects ...");
 
 #region setup
-// load the settings
-string ciatSettingsFileName   = "ciatSettings.yaml";
-DirectorySettings dirSettings = new();
-CiatSettings settings         = new(Path.Combine(dirSettings.SourceDirectory, ciatSettingsFileName));
-
 // create the temp directory
 Console.WriteLine($"Using the temporary directory '{dirSettings.TempDirectory}'.");
 Directory.CreateDirectory(dirSettings.TempDirectory);
@@ -19,21 +14,21 @@ Directory.SetCurrentDirectory(dirSettings.TempDirectory);
 #endregion
 
 #region launcher project
-Project launcher = settings.Solution.Projects.Launcher;
+Project launcher = ciatSettings.Solution.Projects.Launcher;
 
 Generate.Project(launcher.Name, launcher.Type, launcher.Framework, launcher.Packages, out string launcherCsprojFile);
-Generate.AddExternalReference(launcherCsprojFile, Path.Combine("..", ciatSettingsFileName));
+Generate.AddExternalReference(launcherCsprojFile, Path.Combine("..", ciatSettings.FileName));
 #endregion
 
 #region command project
-Project command = settings.Solution.Projects.Command;
+Project command = ciatSettings.Solution.Projects.Command;
 
 Generate.Project(command.Name, command.Type, command.Framework, command.Packages, out string commandCsprojFile);
 #endregion
 
 #region sub-projects
 List<string> subProjectFiles = new();
-foreach (Project subProject in settings.Solution.Projects.SubProjects) {
+foreach (Project subProject in ciatSettings.Solution.Projects.SubProjects) {
   Generate.Project(subProject.Name, subProject.Type, subProject.Framework, subProject.Packages, out string subProjectFile);
   Generate.AddReference(subProjectFile, commandCsprojFile);
   Generate.AddReference(launcherCsprojFile, subProjectFile);
@@ -43,7 +38,7 @@ foreach (Project subProject in settings.Solution.Projects.SubProjects) {
 #endregion
 
 #region solution file
-Generate.Solution(settings.Solution.Name, out string slnFile);
+Generate.Solution(ciatSettings.Solution.Name, out string slnFile);
 Generate.AddProject(slnFile, launcherCsprojFile);
 Generate.AddProject(slnFile, commandCsprojFile);
 foreach (string subProjectFile in subProjectFiles) {
