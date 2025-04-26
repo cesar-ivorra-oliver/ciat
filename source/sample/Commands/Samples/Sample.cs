@@ -1,4 +1,5 @@
 ﻿using Ciat.CiatCommand;
+using Microsoft.Extensions.Logging;
 
 namespace sample.Commands.Samples;
 
@@ -19,9 +20,9 @@ public class Sample : ICiatCommand
   public required char CharProperty { get; set; }
   public string? StringProperty { get; set; }
 
-  public void Execute()
+  public void Execute(ILogger logger)
   {
-    Console.WriteLine(string.Join("\n", new[]
+    new List<string>
     {
       $"Executed class name: '{nameof(Sample)}'",
       "properties:",
@@ -39,6 +40,7 @@ public class Sample : ICiatCommand
       $"{nameof(BoolProperty)}={BoolProperty} ({BoolProperty.GetType()})",
       $"{nameof(CharProperty)}={CharProperty} ({CharProperty.GetType()})",
       $"{nameof(StringProperty)}={StringProperty} ({StringProperty?.GetType()})"
-    }));
+    }
+    .ForEach(line => logger.LogInformation(line));
   }
 }

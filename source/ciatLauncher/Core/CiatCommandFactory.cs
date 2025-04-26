@@ -2,16 +2,17 @@
 using System.CommandLine;
 using System.Reflection;
 using Ciat.CiatCommand;
+using Microsoft.Extensions.Logging;
 
 namespace Ciat.Core;
 
-public class CommandFactory
+public class CiatCommandFactory
 {
   private List<Command> _allCommands;
   private List<Type> _commandTypes;
   private CiatSettings _ciatSettings;
 
-  public CommandFactory(CiatSettings settings)
+  public CiatCommandFactory(CiatSettings settings)
   {
     _ciatSettings = settings;
     LoadCiatCommands();
@@ -188,7 +189,11 @@ public class CommandFactory
       property.SetValue(instance, propertyValues[property.Name]);
     }
 
+    // set the logger
+    var loggerFactory = LoggerFactory.Create(builder => builder.AddConsole());
+    var logger        = loggerFactory.CreateLogger(commandType.Name);
+
     // execute the command
-    instance.Execute();
+    instance.Execute(logger);
   }
 }

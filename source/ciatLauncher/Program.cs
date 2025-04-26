@@ -10,7 +10,7 @@ class Program
   {
     // core 
     var settings  = new CiatSettings("ciatSettings.yaml");
-    var factory   = new CommandFactory(settings);
+    var factory   = new CiatCommandFactory(settings);
 
     // command line root
     var rootCommand = new RootCommand("Cesar Ivorra automation tool.");

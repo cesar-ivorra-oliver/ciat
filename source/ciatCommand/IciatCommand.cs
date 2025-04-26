@@ -1,7 +1,9 @@
-﻿namespace Ciat.CiatCommand
+﻿using Microsoft.Extensions.Logging;
+
+namespace Ciat.CiatCommand
 {
   public interface ICiatCommand
   {
-    void Execute();
+    void Execute(ILogger logger);
   }
 }
