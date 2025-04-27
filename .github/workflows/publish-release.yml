@@ -28,3 +28,19 @@ jobs:
       runs-on: windows-latest
       configuration: Release
       runtime: win-x64
+
+  test-linux:
+    needs: [linux-x64]
+    uses: ./.github/workflows/wc-sample.yml
+    with:
+      runs-on: ubuntu-latest
+  test-macos:
+    needs: [macos-x64]
+    uses: ./.github/workflows/wc-sample.yml
+    with:
+      runs-on: macos-latest
+  test-windows:
+    needs: [windows-x64]
+    uses: ./.github/workflows/wc-sample.yml
+    with:
+      runs-on: windows-latest

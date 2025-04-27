@@ -50,30 +50,12 @@ jobs:
           --self-contained
           --output ${{env.PUBLISH_PATH}}
 
-      - name: Make executable (linux)
-        if: ${{ contains(inputs.runtime, 'linux')}}
-        run: chmod +x ${{env.PUBLISH_PATH}}/ciatLauncher
+      - name: Upload ciat artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ciat
+          path: ${{env.PUBLISH_PATH}}
+          if-no-files-found: error
+          retention-days: 1
+          overwrite: true
 
-      - name: Execute SampleEmpty command
-        run: ${{env.PUBLISH_PATH}}/ciatLauncher SampleEmpty
-
-      - name: Execute SampleLogger command
-        run: ${{env.PUBLISH_PATH}}/ciatLauncher SampleLogger
-
-      - name: Execute SampleProperties command
-        run: >
-          ${{env.PUBLISH_PATH}}/ciatLauncher SampleProperties
-          --ByteProperty 255
-          --SByteProperty -128
-          --ShortProperty -32768
-          --UShortProperty 65535
-          --IntProperty 2147483647
-          --UIntProperty 4294967295
-          --LongProperty -9223372036854775808
-          --ULongProperty 18446744073709551615
-          --FloatProperty 3.14
-          --DoubleProperty 2.718
-          --DecimalProperty 1.618
-          --BoolProperty true
-          --CharProperty A
-          --StringProperty "Hello world ciat!"
