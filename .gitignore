@@ -1,0 +1,11 @@
+# folders
+.vs
+.vscode
+obj
+bin
+Properties
+
+# files
+*.csproj
+*.sln
+omnisharp.json

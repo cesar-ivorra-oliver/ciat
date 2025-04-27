@@ -1,0 +1,31 @@
+solution:
+  name: ciat
+  projects:
+    launcher:
+      name: ciatLauncher
+      type: console
+      framework: net9.0
+      packages:
+        - name: Microsoft.CodeAnalysis
+          version: 4.13.0
+        - name: Microsoft.CodeAnalysis.CSharp
+          version: 4.13.0
+        - name: Microsoft.Extensions.Logging
+          version: 9.0.4
+        - name: Microsoft.Extensions.Logging.Console
+          version: 9.0.4
+        - name: System.CommandLine
+          version: 2.0.0-beta4.22272.1
+        - name: YamlDotNet
+          version: 16.3.0
+    command:
+      name: ciatCommand
+      type: classlib
+      framework: net9.0
+      packages:
+        - name: Microsoft.Extensions.Logging
+          version: 9.0.4
+    subProjects: # List of sub-projects (added by the user)
+      - name: sample
+        type: classlib
+        framework: net9.0

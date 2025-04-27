@@ -1,0 +1,1 @@
+dotnet-script $PSScriptRoot\scripts\GenerateProjects.csx
