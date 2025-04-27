@@ -3,108 +3,24 @@ name: Publish Release (test)
 on:
   push:
   pull_request:
-
-env:
-  CIAT_SLN_PATH: source/ciat.sln
-  CIAT_LAUNCHER_CSPROJ_PATH: source/ciatLauncher/ciatLauncher.csproj
-  SCRIPT_GENERATATE_PROJECTS_PATH: source/scripts/GenerateProjects.csx
-  PUBLISH_LINUX_PATH: publish/linux-x64
-  PUBLISH_WINDOWS_PATH: publish/win-x64
+  workflow_dispatch:
 
 jobs:
   linux-x64:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Bootstrap ciat
-        uses: cesar-ivorra-oliver/ciat/.github/actions/bootstrap@prototype/first_iteration # TODO: Change to main before merging
-
-      - name: Generate solution
-        run: dotnet-script ${{env.SCRIPT_GENERATATE_PROJECTS_PATH}}
-
-      - name: Restore solution
-        run: dotnet restore ${{env.CIAT_SLN_PATH}}
-
-      - name: Build solution
-        run: dotnet build ${{env.CIAT_SLN_PATH}} --configuration Release
-
-      - name: Publish
-        run: >
-          dotnet publish ${{env.CIAT_LAUNCHER_CSPROJ_PATH}}
-          --configuration Release
-          --runtime linux-x64
-          --self-contained
-          --output ${{env.PUBLISH_LINUX_PATH}}
-
-      - name: Make executable
-        run: chmod +x ${{env.PUBLISH_LINUX_PATH}}/ciatLauncher
-
-      - name: Execute SampleEmpty command
-        run: ${{env.PUBLISH_LINUX_PATH}}/ciatLauncher SampleEmpty
-
-      - name: Execute SampleLogger command
-        run: ${{env.PUBLISH_LINUX_PATH}}/ciatLauncher SampleLogger
-
-      - name: Execute SampleProperties command
-        run: >
-          ${{env.PUBLISH_LINUX_PATH}}/ciatLauncher SampleProperties
-          --ByteProperty 255
-          --SByteProperty -128
-          --ShortProperty -32768
-          --UShortProperty 65535
-          --IntProperty 2147483647
-          --UIntProperty 4294967295
-          --LongProperty -9223372036854775808
-          --ULongProperty 18446744073709551615
-          --FloatProperty 3.14
-          --DoubleProperty 2.718
-          --DecimalProperty 1.618
-          --BoolProperty true
-          --CharProperty A
-          --StringProperty "Hello world ciat!"
-
+    uses: ./.github/workflows/wc-publish.yml
+    with:
+      runs-on: ubuntu-latest
+      configuration: Release
+      runtime: linux-x64
   windows-x64:
-    runs-on: windows-latest
-    steps:
-      - name: Bootstrap ciat
-        uses: cesar-ivorra-oliver/ciat/.github/actions/bootstrap@prototype/first_iteration # TODO: Change to main before merging
-
-      - name: Generate solution
-        run: dotnet-script ${{env.SCRIPT_GENERATATE_PROJECTS_PATH}}
-
-      - name: Restore solution
-        run: dotnet restore ${{env.CIAT_SLN_PATH}}
-
-      - name: Build solution
-        run: dotnet build ${{env.CIAT_SLN_PATH}} --configuration Release
-
-      - name: Publish
-        run: >
-          dotnet publish ${{env.CIAT_LAUNCHER_CSPROJ_PATH}}
-          --configuration Release
-          --runtime win-x64
-          --self-contained
-          --output ${{env.PUBLISH_WINDOWS_PATH}}
-
-      - name: Execute SampleEmpty command
-        run: ${{env.PUBLISH_WINDOWS_PATH}}/ciatLauncher.exe SampleEmpty
-
-      - name: Execute SampleLogger command
-        run: ${{env.PUBLISH_WINDOWS_PATH}}/ciatLauncher.exe SampleLogger
-
-      - name: Execute SampleProperties command
-        run: >
-          ${{env.PUBLISH_WINDOWS_PATH}}/ciatLauncher.exe SampleProperties
-          --ByteProperty 255
-          --SByteProperty -128
-          --ShortProperty -32768
-          --UShortProperty 65535
-          --IntProperty 2147483647
-          --UIntProperty 4294967295
-          --LongProperty -9223372036854775808
-          --ULongProperty 18446744073709551615
-          --FloatProperty 3.14
-          --DoubleProperty 2.718
-          --DecimalProperty 1.618
-          --BoolProperty true
-          --CharProperty A
-          --StringProperty "Hello world ciat!"
+    uses: ./.github/workflows/wc-publish.yml
+    with:
+      runs-on: windows-latest
+      configuration: Release
+      runtime: win-x64
+  macos-x64:
+    uses: ./.github/workflows/wc-publish.yml
+    with:
+      runs-on: macos-latest
+      configuration: Release
+      runtime: osx-x64

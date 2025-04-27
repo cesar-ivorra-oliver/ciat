@@ -1,0 +1,77 @@
+on:
+  workflow_call:
+    inputs:
+      runs-on:
+        description: The type of runner to use for the job. It can be windows-latest, ubuntu-latest or macos-latest.
+        required: true
+        type: string
+      configuration:
+        description: The configuration to use for the build. It can be Debug or Release.
+        required: true
+        type: string
+      runtime:
+        description: The runtime to use for the build. It can be win-x64, linux-x64 or osx-x64.
+        required: true
+        type: string
+      output:
+        description: The output path for the publish. It can be any valid path.
+        default: publish
+        type: string
+
+env:
+  CIAT_SLN_PATH: source/ciat.sln
+  CIAT_LAUNCHER_CSPROJ_PATH: source/ciatLauncher/ciatLauncher.csproj
+  CIAT_SCRIPT_GENERATATE_PROJECTS_PATH: source/scripts/GenerateProjects.csx
+  PUBLISH_PATH: ${{inputs.output}}/${{inputs.runtime}}
+
+jobs:
+  publish:
+    runs-on: ${{inputs.runs-on}}
+    steps:
+      - name: Bootstrap ciat
+        uses: cesar-ivorra-oliver/ciat/.github/actions/bootstrap@prototype/first_iteration # TODO: Change to main before merging
+
+      - name: Generate solution
+        run: dotnet-script ${{env.CIAT_SCRIPT_GENERATATE_PROJECTS_PATH}}
+
+      - name: Restore solution
+        run: dotnet restore ${{env.CIAT_SLN_PATH}}
+
+      - name: Build solution
+        run: dotnet build ${{env.CIAT_SLN_PATH}} --configuration ${{inputs.configuration}}
+
+      - name: Publish
+        run: >
+          dotnet publish ${{env.CIAT_LAUNCHER_CSPROJ_PATH}}
+          --configuration ${{inputs.configuration}}
+          --runtime ${{inputs.runtime}}
+          --self-contained
+          --output ${{env.PUBLISH_PATH}}
+
+      - name: Make executable (linux)
+        if: ${{ contains(inputs.runtime, 'linux')}}
+        run: chmod +x ${{env.PUBLISH_PATH}}}}/ciatLauncher
+
+      - name: Execute SampleEmpty command
+        run: ${{env.PUBLISH_PATH}}/ciatLauncher SampleEmpty
+
+      - name: Execute SampleLogger command
+        run: ${{env.PUBLISH_PATH}}/ciatLauncher SampleLogger
+
+      - name: Execute SampleProperties command
+        run: >
+          ${{env.PUBLISH_PATH}}/ciatLauncher SampleProperties
+          --ByteProperty 255
+          --SByteProperty -128
+          --ShortProperty -32768
+          --UShortProperty 65535
+          --IntProperty 2147483647
+          --UIntProperty 4294967295
+          --LongProperty -9223372036854775808
+          --ULongProperty 18446744073709551615
+          --FloatProperty 3.14
+          --DoubleProperty 2.718
+          --DecimalProperty 1.618
+          --BoolProperty true
+          --CharProperty A
+          --StringProperty "Hello world ciat!"
