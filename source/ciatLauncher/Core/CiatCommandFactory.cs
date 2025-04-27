@@ -2,7 +2,7 @@
 using System.CommandLine;
 using System.Reflection;
 using Ciat.CiatCommand;
-using Microsoft.Extensions.Logging;
+using ciatLauncher.Core;
 
 namespace Ciat.Core;
 
@@ -175,7 +175,7 @@ public class CiatCommandFactory
     return convertedProperties;
   }
 
-  private static void ExecuteCiatCommand(Type commandType, Dictionary<string, object> propertyValues) {
+  private void ExecuteCiatCommand(Type commandType, Dictionary<string, object> propertyValues) {
     // create an instance of the command
     if (Activator.CreateInstance(commandType) is not ICiatCommand instance)
     {
@@ -190,8 +190,7 @@ public class CiatCommandFactory
     }
 
     // set the logger
-    var loggerFactory = LoggerFactory.Create(builder => builder.AddConsole());
-    var logger        = loggerFactory.CreateLogger(commandType.Name);
+    var logger = new ICiatLogger(commandType.Name);
 
     // execute the command
     instance.Execute(logger);

@@ -4,13 +4,13 @@ using Microsoft.Extensions.Logging;
 
 namespace sample.Commands.Samples
 {
-  public class Empty : ICiatCommand
+  public class SampleEmpty : ICiatCommand
   {
     public void Execute(ILogger logger)
     {
       new List<string>
       {
-        $"Executed class name: '{nameof(Empty)}'",
+        $"Executed class name: '{nameof(SampleEmpty)}'",
         "class without properties"
       }.ForEach(line => logger.LogInformation(line));
     }

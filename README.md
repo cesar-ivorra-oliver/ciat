@@ -38,39 +38,56 @@ TODO
   ciatLauncher <comand_name> --<command_property> <command_property_value> ...
 ```
 
-### Examples
-#### Execution of Sample command
-```powershell
-ciatLauncher.exe Sample --ByteProperty 255 --SByteProperty -128 --ShortProperty -32768 --UShortProperty 65535 --IntProperty 2147483647 --UIntProperty 4294967295 --LongProperty -9223372036854775808 --ULongProperty 18446744073709551615 --FloatProperty 3.14 --DoubleProperty 2.718 --DecimalProperty 1.618 --BoolProperty true --CharProperty A --StringProperty "Hello world ciat!"
-```
+## Examples
 
-#### Sample command result
-```powershell
-Executed class name: 'Sample'
-properties:
-ByteProperty=255 (System.Byte)
-SByteProperty=-128 (System.SByte)
-ShortProperty=-32768 (System.Int16)
-UShortProperty=65535 (System.UInt16)
-IntProperty=2147483647 (System.Int32)
-UIntProperty=4294967295 (System.UInt32)
-LongProperty=-9223372036854775808 (System.Int64)
-ULongProperty=18446744073709551615 (System.UInt64)
-FloatProperty=314 (System.Single)
-DoubleProperty=2718 (System.Double)
-DecimalProperty=1618 (System.Decimal)
-BoolProperty=True (System.Boolean)
-CharProperty=A (System.Char)
-StringProperty=Hello world ciat! (System.String)
-```
-
-#### Execution of Empty command
+### SampleEmpty command
+#### execution
 ```powershell
 ciatLauncher.exe Empty
 ```
-
-#### Empty command result
+#### result
 ```powershell
 Executed class name: 'Empty'
 class without properties
+```
+
+### SampleProperties command
+#### execution
+```powershell
+ciatLauncher.exe SampleProperties --ByteProperty 255 --SByteProperty -128 --ShortProperty -32768 --UShortProperty 65535 --IntProperty 2147483647 --UIntProperty 4294967295 --LongProperty -9223372036854775808 --ULongProperty 18446744073709551615 --FloatProperty 3.14 --DoubleProperty 2.718 --DecimalProperty 1.618 --BoolProperty true --CharProperty A --StringProperty "Hello world ciat!"
+```
+#### result
+```powershell
+2025-04-27 12:01:39 [INFO] [SampleProperties] Executed class name: 'SampleProperties'
+2025-04-27 12:01:39 [INFO] [SampleProperties] properties:
+2025-04-27 12:01:39 [INFO] [SampleProperties] ByteProperty=255 (System.Byte)
+2025-04-27 12:01:39 [INFO] [SampleProperties] SByteProperty=-128 (System.SByte)
+2025-04-27 12:01:39 [INFO] [SampleProperties] ShortProperty=-32768 (System.Int16)
+2025-04-27 12:01:39 [INFO] [SampleProperties] UShortProperty=65535 (System.UInt16)
+2025-04-27 12:01:39 [INFO] [SampleProperties] IntProperty=2147483647 (System.Int32)
+2025-04-27 12:01:39 [INFO] [SampleProperties] UIntProperty=4294967295 (System.UInt32)
+2025-04-27 12:01:39 [INFO] [SampleProperties] LongProperty=-9223372036854775808 (System.Int64)
+2025-04-27 12:01:39 [INFO] [SampleProperties] ULongProperty=18446744073709551615 (System.UInt64)
+2025-04-27 12:01:39 [INFO] [SampleProperties] FloatProperty=314 (System.Single)
+2025-04-27 12:01:39 [INFO] [SampleProperties] DoubleProperty=2718 (System.Double)
+2025-04-27 12:01:39 [INFO] [SampleProperties] DecimalProperty=1618 (System.Decimal)
+2025-04-27 12:01:39 [INFO] [SampleProperties] BoolProperty=True (System.Boolean)
+2025-04-27 12:01:39 [INFO] [SampleProperties] CharProperty=A (System.Char)
+2025-04-27 12:01:39 [INFO] [SampleProperties] StringProperty=Hello world ciat! (System.String)
+```
+
+### SampleLogger command
+#### execution
+```powershell
+ciatLauncher.exe SampleLogger
+```
+#### result
+```powershell
+2025-04-27 12:06:31 [INFO] [SampleLogger] Executed class name: 'SampleLogger'
+2025-04-27 12:06:31 [TRACE] [SampleLogger] This is a trace message
+2025-04-27 12:06:31 [DEBUG] [SampleLogger] This is a debug message
+2025-04-27 12:06:31 [INFO] [SampleLogger] This is an information message
+2025-04-27 12:06:31 [WARN] [SampleLogger] This is a warning message
+2025-04-27 12:06:31 [ERROR] [SampleLogger] This is an error message
+2025-04-27 12:06:31 [CRIT] [SampleLogger] This is a critical message
 ```

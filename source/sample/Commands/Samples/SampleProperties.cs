@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 
 namespace sample.Commands.Samples;
 
-public class Sample : ICiatCommand
+public class SampleProperties : ICiatCommand
 {
   public byte ByteProperty { get; set; }
   public sbyte SByteProperty { get; set; }
@@ -24,7 +24,7 @@ public class Sample : ICiatCommand
   {
     new List<string>
     {
-      $"Executed class name: '{nameof(Sample)}'",
+      $"Executed class name: '{nameof(SampleProperties)}'",
       "properties:",
       $"{nameof(ByteProperty)}={ByteProperty} ({ByteProperty.GetType()})",
       $"{nameof(SByteProperty)}={SByteProperty} ({SByteProperty.GetType()})",
