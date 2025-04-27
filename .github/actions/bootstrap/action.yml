@@ -8,9 +8,10 @@ runs:
       uses: actions/checkout@v4
 
     - name: Setup dotnet
-      uses: actions/setup-dotnet@v3
+      uses: actions/setup-dotnet@v4
       with:
         dotnet-version: '9.0.x'
+        cache: true
 
     - name: Install dotnet-script
       shell: ${{ runner.os == 'Windows' && 'pwsh' || 'bash' }}

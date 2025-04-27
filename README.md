@@ -25,8 +25,32 @@ Cesar Ivorra Automation Tool
     dotnet-script --version
     ```
 
-## Compile
-TODO
+## Generate the solution (ciat.sln)
+```powershell
+dotnet-script source/scripts/GenerateProjects.csx
+```
+
+## Compilation
+### Build
+```powershell
+dotnet build source/ciat.sln --configuration Debug
+# or
+dotnet build source/ciat.sln --configuration Release
+```
+### Publish
+#### windows
+```powershell
+dotnet publish source/ciatLauncher/ciatLauncher.csproj --configuration Release --runtime win-x64 --self-contained --output publish/win-x64
+```
+#### linux
+```powershell
+dotnet publish source/ciatLauncher/ciatLauncher.csproj --configuration Release --runtime linux-x64 --self-contained --output publish/linux-x64
+```
+
+#### macOS
+```powershell
+dotnet publish source/ciatLauncher/ciatLauncher.csproj --configuration Release --runtime osx-x64 --self-contained --output publish/osx-x64
+```
 
 ## Comand to execute a command
 - Windows
