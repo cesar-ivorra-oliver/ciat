@@ -1,3 +1,5 @@
+name: wc-publish
+
 on:
   workflow_call:
     inputs:
@@ -29,7 +31,7 @@ jobs:
     runs-on: ${{inputs.runs-on}}
     steps:
       - name: Bootstrap ciat
-        uses: cesar-ivorra-oliver/ciat/.github/actions/bootstrap@prototype/first_iteration # TODO: Change to main before merging
+        uses: cesar-ivorra-oliver/ciat/.github/actions/bootstrap@main
 
       - name: Generate solution
         run: dotnet-script ${{env.CIAT_SCRIPT_GENERATATE_PROJECTS_PATH}}
