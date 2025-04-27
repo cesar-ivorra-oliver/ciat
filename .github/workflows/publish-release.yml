@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Bootstrap ciat
-        uses: ./.github/actions/bootstrap
+        uses: cesar-ivorra-oliver/ciat/.github/actions/bootstrap@prototype/first_iteration # TODO: Change to main before merging
 
       - name: Generate solution
         run: dotnet-script ${{env.SCRIPT_GENERATATE_PROJECTS_PATH}}
@@ -66,7 +66,7 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Bootstrap ciat
-        uses: ./.github/actions/bootstrap
+        uses: cesar-ivorra-oliver/ciat/.github/actions/bootstrap@prototype/first_iteration # TODO: Change to main before merging
 
       - name: Generate solution
         run: dotnet-script ${{env.SCRIPT_GENERATATE_PROJECTS_PATH}}
