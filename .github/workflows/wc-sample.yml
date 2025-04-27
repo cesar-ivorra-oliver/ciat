@@ -26,14 +26,14 @@ jobs:
           import os
 
           if "${{runner.os}}" == "Windows":
-            path = os.path.join("${{steps.download-artifact.outputs.download-path}}", "ciatLauncher.exe")
+            path = os.path.normpath(os.path.join(r"${{steps.download-artifact.outputs.download-path}}", r"ciatLauncher.exe"))
           else:
-            path = os.path.join("${{steps.download-artifact.outputs.download-path}}", "ciatLauncher")
+            path = os.path.normpath(os.path.join(r"${{steps.download-artifact.outputs.download-path}}", r"ciatLauncher"))
 
           print(f"Resolved path: '{path}'.")
 
           with open(os.environ["GITHUB_OUTPUT"], "a") as f:
-            f.write(f"executable-path=\"{path}\"\n")
+            f.write(f"executable-path={path}\n")
 
       - name: Make executable (linux, macOS)
         if: ${{runner.os != 'Windows'}}
