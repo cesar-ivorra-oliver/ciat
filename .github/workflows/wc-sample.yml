@@ -18,19 +18,33 @@ jobs:
         with:
           name: ciat
 
+      - name: Set ciatLauncher path
+        id: ciat-launcher
+        shell: python
+        run: |
+          import os
+
+          if "${{runner.os}}" == "Windows":
+            path = "ciat/ciatLauncher.exe"
+          else:
+            path = "ciat/ciatLauncher"
+
+          with open(os.environ["GITHUB_OUTPUT"], "a") as f:
+            f.write(f"path={path}\n")
+
       - name: Make executable (linux)
         if: ${{runner.os == 'Linux'}}
-        run: chmod +x ciatLauncher
+        run: chmod +x ${{steps.ciat-launcher.outputs.path}}
 
       - name: Execute SampleEmpty command
-        run: ciatLauncher SampleEmpty
+        run: ${{steps.ciat-launcher.outputs.path}} SampleEmpty
 
       - name: Execute SampleLogger command
-        run: ciatLauncher SampleLogger
+        run: ${{steps.ciat-launcher.outputs.path}} SampleLogger
 
       - name: Execute SampleProperties command
         run: >
-          ciatLauncher SampleProperties
+          ${{steps.ciat-launcher.outputs.path}} SampleProperties
           --ByteProperty 255
           --SByteProperty -128
           --ShortProperty -32768
