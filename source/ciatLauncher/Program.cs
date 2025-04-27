@@ -1,5 +1,6 @@
 ﻿
 using System.CommandLine;
+using System.Reflection;
 using Ciat.Core;
 
 namespace Ciat.Launcher;
@@ -8,8 +9,8 @@ class Program
 {
   static int Main(string[] args)
   {
-    // core 
-    var settings  = new CiatSettings("ciatSettings.yaml");
+    // core
+    var settings  = new CiatSettings(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ciatSettings.yaml"));
     var factory   = new CiatCommandFactory(settings);
 
     // command line root

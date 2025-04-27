@@ -5,4 +5,4 @@ param (
 $addPreview = ""
 if ($Preview) { $addPreview = "--preview" }
 
-dotnet-script .\scripts\CleanProjects.csx $addPreview
+dotnet-script $PSScriptRoot\scripts\CleanProjects.csx $addPreview
