@@ -19,25 +19,22 @@ jobs:
         with:
           name: ciat
 
-      - name: Display structure of downloaded files
-        run: ls -R
-
-      - name: Set ciatLauncher path
+      - name: Resolve ciatLauncher executable path
         id: ciat-launcher
         shell: python
         run: |
           import os
 
           if "${{runner.os}}" == "Windows":
-            path = "${{steps.download-artifact.outputs.download-path}}\\ciatLauncher.exe"
+            path = os.path.join("${{steps.download-artifact.outputs.download-path}}", "ciatLauncher.exe")
           else:
-            path = "${{steps.download-artifact.outputs.download-path}}/ciatLauncher"
+            path = os.path.join("${{steps.download-artifact.outputs.download-path}}", "ciatLauncher")
 
           with open(os.environ["GITHUB_OUTPUT"], "a") as f:
             f.write(f"executable-path={path}\n")
 
-      - name: Make executable (linux)
-        if: ${{runner.os == 'Linux'}}
+      - name: Make executable (linux, macOS)
+        if: ${{runner.os != 'Windows'}}
         run: chmod +x ${{steps.ciat-launcher.outputs.executable-path}}
 
       - name: Execute SampleEmpty command
