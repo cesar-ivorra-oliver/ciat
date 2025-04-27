@@ -30,8 +30,10 @@ jobs:
           else:
             path = os.path.join("${{steps.download-artifact.outputs.download-path}}", "ciatLauncher")
 
+          print(f"Resolved path: '{path}'.")
+
           with open(os.environ["GITHUB_OUTPUT"], "a") as f:
-            f.write(f"executable-path={path}\n")
+            f.write(f"executable-path=\"{path}\"\n")
 
       - name: Make executable (linux, macOS)
         if: ${{runner.os != 'Windows'}}
