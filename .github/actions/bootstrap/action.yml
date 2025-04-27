@@ -2,7 +2,7 @@ name: Bootstrap ciat
 description: Bootstrap ciat
 
 runs:
-  using: "composite"
+  using: 'composite'
   steps:
     - name: Checkout code
       uses: actions/checkout@v4
@@ -10,7 +10,8 @@ runs:
     - name: Setup dotnet
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: "9.0.x"
+        dotnet-version: '9.0.x'
 
     - name: Install dotnet-script
+      shell: ${{ runner.os == 'Windows' && 'pwsh' || 'bash' }}
       run: dotnet tool install -g dotnet-script
