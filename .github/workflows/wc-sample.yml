@@ -14,6 +14,7 @@ jobs:
     runs-on: ${{inputs.runs-on}}
     steps:
       - name: Download artifact
+        id: download-artifact
         uses: actions/download-artifact@v4
         with:
           name: ciat
@@ -28,26 +29,26 @@ jobs:
           import os
 
           if "${{runner.os}}" == "Windows":
-            executable = "ciatLauncher.exe"
+            path = "${{steps.download-artifact.outputs.download-path}}\\ciatLauncher.exe"
           else:
-            executable = "ciatLauncher"
+            path = "${{steps.download-artifact.outputs.download-path}}/ciatLauncher"
 
           with open(os.environ["GITHUB_OUTPUT"], "a") as f:
-            f.write(f"executable={executable}\n")
+            f.write(f"executable-path={path}\n")
 
       - name: Make executable (linux)
         if: ${{runner.os == 'Linux'}}
-        run: chmod +x ${{steps.ciat-launcher.outputs.executable}}
+        run: chmod +x ${{steps.ciat-launcher.outputs.executable-path}}
 
       - name: Execute SampleEmpty command
-        run: ${{steps.ciat-launcher.outputs.executable}} SampleEmpty
+        run: ${{steps.ciat-launcher.outputs.executable-path}} SampleEmpty
 
       - name: Execute SampleLogger command
-        run: ${{steps.ciat-launcher.outputs.executable}} SampleLogger
+        run: ${{steps.ciat-launcher.outputs.executable-path}} SampleLogger
 
       - name: Execute SampleProperties command
         run: >
-          ${{steps.ciat-launcher.outputs.executable}} SampleProperties
+          ${{steps.ciat-launcher.outputs.executable-path}} SampleProperties
           --ByteProperty 255
           --SByteProperty -128
           --ShortProperty -32768
