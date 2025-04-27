@@ -18,6 +18,9 @@ jobs:
         with:
           name: ciat
 
+      - name: Display structure of downloaded files
+        run: ls -R
+
       - name: Set ciatLauncher path
         id: ciat-launcher
         shell: python
