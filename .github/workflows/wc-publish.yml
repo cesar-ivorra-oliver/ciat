@@ -50,7 +50,7 @@ jobs:
 
       - name: Make executable (linux)
         if: ${{ contains(inputs.runtime, 'linux')}}
-        run: chmod +x ${{env.PUBLISH_PATH}}}}/ciatLauncher
+        run: chmod +x ${{env.PUBLISH_PATH}}/ciatLauncher
 
       - name: Execute SampleEmpty command
         run: ${{env.PUBLISH_PATH}}/ciatLauncher SampleEmpty

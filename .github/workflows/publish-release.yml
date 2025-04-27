@@ -5,6 +5,10 @@ on:
   pull_request:
   workflow_dispatch:
 
+concurrency:
+  group: publish-release
+  cancel-in-progress: true
+
 jobs:
   linux-x64:
     uses: ./.github/workflows/wc-publish.yml
