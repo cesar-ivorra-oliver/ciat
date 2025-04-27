@@ -16,15 +16,15 @@ jobs:
       runs-on: ubuntu-latest
       configuration: Release
       runtime: linux-x64
-  windows-x64:
-    uses: ./.github/workflows/wc-publish.yml
-    with:
-      runs-on: windows-latest
-      configuration: Release
-      runtime: win-x64
   macos-x64:
     uses: ./.github/workflows/wc-publish.yml
     with:
       runs-on: macos-latest
       configuration: Release
       runtime: osx-x64
+  windows-x64:
+    uses: ./.github/workflows/wc-publish.yml
+    with:
+      runs-on: windows-latest
+      configuration: Release
+      runtime: win-x64
