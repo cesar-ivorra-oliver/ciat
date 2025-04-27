@@ -28,26 +28,26 @@ jobs:
           import os
 
           if "${{runner.os}}" == "Windows":
-            path = "ciat/ciatLauncher.exe"
+            executable = "ciatLauncher.exe"
           else:
-            path = "ciat/ciatLauncher"
+            executable = "ciatLauncher"
 
           with open(os.environ["GITHUB_OUTPUT"], "a") as f:
-            f.write(f"path={path}\n")
+            f.write(f"executable={executable}\n")
 
       - name: Make executable (linux)
         if: ${{runner.os == 'Linux'}}
-        run: chmod +x ${{steps.ciat-launcher.outputs.path}}
+        run: chmod +x ${{steps.ciat-launcher.outputs.executable}}
 
       - name: Execute SampleEmpty command
-        run: ${{steps.ciat-launcher.outputs.path}} SampleEmpty
+        run: ${{steps.ciat-launcher.outputs.executable}} SampleEmpty
 
       - name: Execute SampleLogger command
-        run: ${{steps.ciat-launcher.outputs.path}} SampleLogger
+        run: ${{steps.ciat-launcher.outputs.executable}} SampleLogger
 
       - name: Execute SampleProperties command
         run: >
-          ${{steps.ciat-launcher.outputs.path}} SampleProperties
+          ${{steps.ciat-launcher.outputs.executable}} SampleProperties
           --ByteProperty 255
           --SByteProperty -128
           --ShortProperty -32768
