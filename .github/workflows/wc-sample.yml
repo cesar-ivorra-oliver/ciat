@@ -17,7 +17,7 @@ jobs:
         id: download-artifact
         uses: actions/download-artifact@v4
         with:
-          name: ciat
+          name: ciat_${{runner.os}}
 
       - name: Resolve ciatLauncher executable path
         id: ciat-launcher
