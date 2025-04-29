@@ -53,7 +53,7 @@ jobs:
       - name: Upload ciat artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ciat
+          name: ciat_${{inputs.configuration}}
           path: ${{env.PUBLISH_PATH}}
           if-no-files-found: error
           retention-days: 1
