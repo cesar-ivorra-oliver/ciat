@@ -1,6 +1,7 @@
 ﻿using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
 
+// this class is not declared in a namespace as it is shared between the C# scripts and the C# code
 public class CiatSettings
 {
   public Solution Solution { get; set; }
@@ -9,7 +10,8 @@ public class CiatSettings
   // Parameterless constructor (required by YamlDotNet)
   public CiatSettings()
   {
-    Solution = new Solution();
+    Solution = default!;
+    FileName = default!;
   }
 
   public CiatSettings(string yamlFilePath) : this()
@@ -34,31 +36,32 @@ public class CiatSettings
 
 public class Solution
 {
-  public string Name { get; set; }
-  public Projects Projects { get; set; }
+  public required string Name { get; set; }
+  public required string Description { get; set; }
+  public required Projects Projects { get; set; }
 }
 
 public class Projects
 {
-  public Project Launcher { get; set; }
-  public Project Command { get; set; }
+  public required Project Launcher { get; set; }
+  public required Project Command { get; set; }
 
   [YamlMember(DefaultValuesHandling = DefaultValuesHandling.OmitNull)]
-  public List<Project> SubProjects { get; set; } = new List<Project>();
+  public List<Project> SubProjects { get; set; } = [];
 }
 
 public class Project
 {
-  public string Name { get; set; }
-  public string Framework { get; set; }
-  public string Type { get; set; }
+  public required string Name { get; set; }
+  public required string Framework { get; set; }
+  public required string Type { get; set; }
 
   [YamlMember(DefaultValuesHandling = DefaultValuesHandling.OmitNull)]
-  public List<Package> Packages { get; set; } = new List<Package>();
+  public List<Package> Packages { get; set; } = [];
 }
 
 public class Package
 {
-  public string Name { get; set; }
-  public string Version { get; set; }
+  public required string Name { get; set; }
+  public required string Version { get; set; }
 }

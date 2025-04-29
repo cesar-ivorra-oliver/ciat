@@ -2,55 +2,47 @@
 using System.CommandLine;
 using System.Reflection;
 using Ciat.CiatCommand;
-using ciatLauncher.Core;
 
 namespace Ciat.Core;
 
 public class CiatCommandFactory
 {
+  private readonly CiatSettings _ciatSettings;
   private List<Command> _allCommands;
-  private List<Type> _commandTypes;
-  private CiatSettings _ciatSettings;
 
   public CiatCommandFactory(CiatSettings settings)
   {
     _ciatSettings = settings;
+    _allCommands  = [];
     LoadCiatCommands();
   }
 
   public Command GetCommand(string commandName)
   {
-    Type? commandType = _commandTypes.FirstOrDefault(
-      commandType => string.Equals(
-        commandType.Name,
+    Command? command = _allCommands.FirstOrDefault(
+      command => string.Equals(
+        command.Name,
         commandName,
         StringComparison.InvariantCultureIgnoreCase)
     );
 
-    return (commandType == null)
-      ? throw new ArgumentException($"Command '{commandName}' not found.")
-      : GetCiatCommand(commandType);
+    return command ?? throw new ArgumentException($"Command '{commandName}' not found.");
   }
 
   public List<Command> GetAllCommands() => _allCommands;
 
-
   private void LoadCiatCommands()
   {
-    _commandTypes = [];
-
-    _ciatSettings.Solution.Projects.SubProjects
-     .Select(project => Assembly.Load(project.Name))
-     .ToList()
-     .ForEach(assembly =>
-     {
-       _commandTypes.AddRange(
-          assembly.GetTypes()
-            .Where(t => typeof(ICiatCommand).IsAssignableFrom(t) && !t.IsInterface));
-     });
-
-    _allCommands = [.. _commandTypes.Select(GetCiatCommand)];
+    // get all the command types from the current assembly
+    _allCommands = [
+      .. _ciatSettings.Solution.Projects.SubProjects
+        .Select(project => Assembly.Load(project.Name))
+        .SelectMany(assembly => assembly.GetTypes())
+        .Where(type => typeof(ICiatCommand).IsAssignableFrom(type) && !type.IsInterface)
+        .Select(GetCiatCommand)
+    ];
   }
+
 
   private Command GetCiatCommand(Type ciatCommandType)
   {
@@ -76,14 +68,13 @@ public class CiatCommandFactory
     // set the handler for the command
     command.SetHandler((context) =>
     {
-      Dictionary<string, string> commandArgumentsDictionary     = GetArgumentDictionary(context.ParseResult?.CommandResult.Children);
+      Dictionary<string, string> commandArgumentsDictionary     = GetArgumentDictionary(context.ParseResult.CommandResult.Children);
       Dictionary<string, object> ciatCommandConvertedProperties = GetConvertedProperties(regularProperties, nullableProperties, requiredProperties, commandArgumentsDictionary);
       ExecuteCiatCommand(ciatCommandType, ciatCommandConvertedProperties);
     });
 
     return command;
   }
-
 
   private static void SearchProperties(PropertyInfo[] properties, out IEnumerable<PropertyInfo> outRegularProperties, out IEnumerable<PropertyInfo> outNullableProperties, out IEnumerable<PropertyInfo> outRequiredProperties)
   {
@@ -119,7 +110,7 @@ public class CiatCommandFactory
   {
     return commandArguments.ToDictionary(
       arg => arg.Symbol.Name,
-      arg => arg.Tokens.FirstOrDefault()?.Value ?? string.Empty
+      arg => arg.Tokens.FirstOrDefault()?.Value ?? string.Empty // TODO: improve allowing lists of arguments
     );
   }
 
@@ -161,13 +152,18 @@ public class CiatCommandFactory
 
   private static Dictionary<string, object> GetConvertedProperties(IEnumerable<PropertyInfo> requiredProperties, Dictionary<string, string> propertyValues, bool required = false)
   {
-    Dictionary<string, object> convertedProperties = new Dictionary<string, object>();
-    
-    requiredProperties.ToList().ForEach(property => {
+    Dictionary<string, object> convertedProperties = [];
+
+    requiredProperties.ToList().ForEach(property =>
+    {
       Type propertyType = required
         ? property.PropertyType
         : Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
-      object convertedValue = Convert.ChangeType(propertyValues[property.Name], propertyType);
+
+      object convertedValue = Convert.ChangeType(
+        propertyValues[property.Name],
+        propertyType
+      );
 
       convertedProperties.Add(property.Name, convertedValue);
     });
@@ -175,7 +171,7 @@ public class CiatCommandFactory
     return convertedProperties;
   }
 
-  private void ExecuteCiatCommand(Type commandType, Dictionary<string, object> propertyValues) {
+  private static void ExecuteCiatCommand(Type commandType, Dictionary<string, object> propertyValues) {
     // create an instance of the command
     if (Activator.CreateInstance(commandType) is not ICiatCommand instance)
     {
@@ -184,10 +180,9 @@ public class CiatCommandFactory
     }
 
     // set the properties of the command
-    foreach (var property in commandType.GetProperties())
-    {
-      property.SetValue(instance, propertyValues[property.Name]);
-    }
+    commandType.GetProperties().ToList().ForEach(property =>
+      property.SetValue(instance, propertyValues[property.Name])
+    );
 
     // set the logger
     var logger = new ICiatLogger(commandType.Name);

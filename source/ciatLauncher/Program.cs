@@ -1,6 +1,5 @@
 ﻿
 using System.CommandLine;
-using System.Reflection;
 using Ciat.Core;
 
 namespace Ciat.Launcher;
@@ -14,7 +13,7 @@ class Program
     var factory   = new CiatCommandFactory(settings);
 
     // command line root
-    var rootCommand = new RootCommand("Cesar Ivorra automation tool.");
+    var rootCommand = new RootCommand(settings.Solution.Description);
 
     // add all available commands
     factory.GetAllCommands().ForEach(rootCommand.AddCommand);
