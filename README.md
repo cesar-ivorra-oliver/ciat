@@ -71,8 +71,8 @@ ciatLauncher.exe Empty
 ```
 #### result
 ```powershell
-Executed class name: 'Empty'
-class without properties
+2025-04-29 20:31:47 [INFO] [SampleEmpty] Executed class name: 'SampleEmpty'
+2025-04-29 20:31:47 [INFO] [SampleEmpty] class without properties
 ```
 
 ### SampleProperties command

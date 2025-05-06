@@ -1,4 +1,5 @@
 solution:
+  description: Cesar Ivorra Automation Tool.
   name: ciat
   projects:
     launcher:
